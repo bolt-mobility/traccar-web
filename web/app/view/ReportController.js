@@ -105,9 +105,12 @@ Ext.define('Traccar.view.ReportController', {
         var dialog = Ext.create('Traccar.view.dialog.ReportConfig');
         dialog.lookupReference('eventTypeField').setHidden(this.lookupReference('reportTypeField').getValue() !== 'events');
         dialog.lookupReference('chartTypeField').setHidden(this.lookupReference('reportTypeField').getValue() !== 'chart');
+        var emailField = dialog.lookupReference('emailField');
+        emailField.setHidden(this.lookupReference('reportTypeField').getValue() !== 'disputes');
         dialog.callingPanel = this;
         dialog.lookupReference('deviceField').setValue(this.deviceId);
         dialog.lookupReference('groupField').setValue(this.groupId);
+        dialog.lookupReference('emailField').setValue(this.userId);
         if (this.eventType !== undefined) {
             dialog.lookupReference('eventTypeField').setValue(this.eventType);
         } else {
@@ -182,6 +185,7 @@ Ext.define('Traccar.view.ReportController', {
                     },
                     params: {
                         deviceId: this.deviceId,
+                        userId: this.userId,
                         groupId: this.groupId,
                         type: this.eventType,
                         from: from.toISOString(),
@@ -425,6 +429,9 @@ Ext.define('Traccar.view.ReportController', {
             this.getView().getLayout().setActiveItem('grid');
         } else if (newValue === 'events') {
             this.getGrid().reconfigure('ReportEvents', this.eventsColumns);
+            this.getView().getLayout().setActiveItem('grid');
+        } else if (newValue === 'disputes') {
+            this.getGrid().reconfigure('ReportDispute', this.routeColumns);
             this.getView().getLayout().setActiveItem('grid');
         } else if (newValue === 'summary') {
             this.getGrid().reconfigure('ReportSummary', this.summaryColumns);
