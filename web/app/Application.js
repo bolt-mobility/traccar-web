@@ -71,6 +71,7 @@ Ext.define('Traccar.Application', {
         'GeofenceTypes',
         'ReportRoute',
         'ReportDispute',
+        'Purchases',
         'ReportEvents',
         'ReportTrips',
         'ReportStops',
