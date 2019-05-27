@@ -49,28 +49,9 @@ Ext.define('Traccar.view.map.MapController', {
             Traccar.app.isMobile() && !Traccar.app.getBooleanAttributePreference('ui.disableReport'));
         this.lookupReference('showEventsButton').setVisible(
             Traccar.app.isMobile() && !Traccar.app.getBooleanAttributePreference('ui.disableEvents'));
-        Ext.Ajax.request({
-            url: 'https://nominatim.openstreetmap.org/search/paris',
-            method: 'GET',
-            timeout: 60000,
-            params:
-                {
-                    format: 'json'
-                },
-            headers:
-                {
-                    'Content-Type': 'application/json'
-                },
-            success: function (response) {
-                var json = JSON.parse(response.responseText);
-                Ext.getStore("LocationSearches").loadData(json, false);
-                console.log(json);
-            },
-            failure: function (response) {
-                Ext.Msg.alert('Status', 'Request Failed.');
-
-            }
-        })
+        var storage = Ext.util.LocalStorage.get('id');
+        var latest = storage.getItem("latest");
+        if(latest) Ext.getStore("LocationSearches").loadData(JSON.parse(latest), false);
     },
 
     showReports: function () {
@@ -82,33 +63,59 @@ Ext.define('Traccar.view.map.MapController', {
     },
 
     searchAddress: function (value) {
-        rootView = this.getView()
-        Ext.Ajax.request({
-            url: 'https://nominatim.openstreetmap.org/search/'+value.value,
-            method: 'GET',
-            timeout: 60000,
-            params:
-                {
-                    format: 'json'
-                },
-            headers:
-                {
-                    'Content-Type': 'application/json'
-                },
-            success: function (response) {
-                var json = JSON.parse(response.responseText);
-                Ext.getStore("LocationSearches").loadData(json, false);
-                console.log(json)
-                rootView.getMapView().setCenter(ol.proj.fromLonLat([
-                    Number(json[0].lon),
-                    Number(json[0].lat)
-                ]));
-            },
-            failure: function (response) {
-                Ext.Msg.alert('Status', 'Request Failed.');
+        console.log(value.value);
+        if(!value.value) {
+            var storage = Ext.util.LocalStorage.get('id');
+            var latest = storage.getItem("latest");
+            if(latest) Ext.getStore("LocationSearches").loadData(JSON.parse(latest), false);
+        } else {
+            rootView = this.getView()
+            Ext.Ajax.request({
+                url: 'https://nominatim.openstreetmap.org/search/' + value.value,
+                method: 'GET',
+                timeout: 60000,
+                params:
+                    {
+                        format: 'json'
+                    },
+                headers:
+                    {
+                        'Content-Type': 'application/json'
+                    },
+                success: function (response) {
+                    var json = JSON.parse(response.responseText);
+                    Ext.getStore("LocationSearches").loadData(json, false);
 
+                },
+                failure: function (response) {
+                    Ext.Msg.alert('Status', 'Request Failed.');
+
+                }
+            })
+        }
+    },
+    onAddressSelect: function (combo, record) {
+        var storage = Ext.util.LocalStorage.get('id');
+        var latest = storage.getItem("latest");
+        if(!latest) {
+            latest = []
+        } else {
+            latest = JSON.parse(latest);
+            if(latest.length > 10) {
+                latest = latest.slice(0,9)
             }
-        })
+        }
+        console.log(latest[0].place_id, record.data.place_id)
+        if(latest[0].place_id != record.data.place_id) {
+            latest.unshift(record.data);
+            storage.setItem("latest", JSON.stringify(latest));
+        }
+
+        rootView.getMapView().setCenter(ol.proj.fromLonLat([
+            Number(record.data.lon),
+            Number(record.data.lat)
+        ]));
+
     },
 
     onFollowClick: function (button, pressed) {

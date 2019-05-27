@@ -51,7 +51,8 @@ Ext.define('Traccar.view.map.Map', {
             queryMode: 'local',
             displayField: 'display_name',
             listeners: {
-                change: 'searchAddress'
+                change: 'searchAddress',
+                select: 'onAddressSelect'
             }
         }, {
             handler: 'showReports',
