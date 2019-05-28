@@ -51,7 +51,7 @@ Ext.define('Traccar.view.map.MapController', {
             Traccar.app.isMobile() && !Traccar.app.getBooleanAttributePreference('ui.disableEvents'));
         var storage = Ext.util.LocalStorage.get('id');
         var latest = storage.getItem("latest");
-        if(latest) Ext.getStore("LocationSearches").loadData(JSON.parse(latest), false);
+        if (latest) Ext.getStore("LocationSearches").loadData(JSON.parse(latest), false);
     },
 
     showReports: function () {
@@ -64,10 +64,10 @@ Ext.define('Traccar.view.map.MapController', {
 
     searchAddress: function (value) {
         console.log(value.value);
-        if(!value.value) {
+        if (!value.value) {
             var storage = Ext.util.LocalStorage.get('id');
             var latest = storage.getItem("latest");
-            if(latest) Ext.getStore("LocationSearches").loadData(JSON.parse(latest), false);
+            if (latest) Ext.getStore("LocationSearches").loadData(JSON.parse(latest), false);
         } else {
             rootView = this.getView()
             Ext.Ajax.request({
@@ -97,16 +97,16 @@ Ext.define('Traccar.view.map.MapController', {
     onAddressSelect: function (combo, record) {
         var storage = Ext.util.LocalStorage.get('id');
         var latest = storage.getItem("latest");
-        if(!latest) {
+        if (!latest) {
             latest = []
         } else {
             latest = JSON.parse(latest);
-            if(latest.length > 10) {
-                latest = latest.slice(0,9)
+            if (latest.length > 10) {
+                latest = latest.slice(0, 9)
             }
         }
         console.log(latest[0].place_id, record.data.place_id)
-        if(latest[0].place_id != record.data.place_id) {
+        if (latest[0].place_id !== record.data.place_id) {
             latest.unshift(record.data);
             storage.setItem("latest", JSON.stringify(latest));
         }
