@@ -35,6 +35,16 @@ Ext.define('Traccar.view.map.GeofenceMap', {
             minWidth: 0,
             handler: 'onTypeSelect'
         }, {
+            xtype: 'combobox',
+            reference: 'mapSearch',
+            store: 'LocationSearches',
+            queryMode: 'local',
+            displayField: 'display_name',
+            listeners: {
+                change: 'searchAddress',
+                select: 'onAddressSelect'
+            }
+        }, {
             xtype: 'tbfill'
         }, {
             glyph: 'xf00c@FontAwesome',
@@ -56,6 +66,7 @@ Ext.define('Traccar.view.map.GeofenceMap', {
     },
 
     initMap: function () {
+        console.log("oopsy")
         var map, featureOverlay, geometry, fillColor;
         this.callParent();
 

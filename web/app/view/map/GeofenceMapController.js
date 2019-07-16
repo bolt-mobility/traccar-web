@@ -20,7 +20,8 @@ Ext.define('Traccar.view.map.GeofenceMapController', {
     alias: 'controller.geofenceMap',
 
     requires: [
-        'Traccar.GeofenceConverter'
+        'Traccar.GeofenceConverter',
+        'Traccar.model.Location'
     ],
 
     config: {
@@ -33,6 +34,12 @@ Ext.define('Traccar.view.map.GeofenceMapController', {
         }
     },
 
+    init: function () {
+        var storage = Ext.util.LocalStorage.get('id');
+        var latest = storage.getItem("latest");
+        if (latest) Ext.getStore("LocationSearches").loadData(JSON.parse(latest), false);
+    },
+
     onSaveClick: function (button) {
         var geometry, projection;
         if (this.getView().getFeatures().getLength() > 0) {
@@ -41,6 +48,64 @@ Ext.define('Traccar.view.map.GeofenceMapController', {
             this.fireEvent('savearea', Traccar.GeofenceConverter.geometryToWkt(projection, geometry));
             button.up('window').close();
         }
+    },
+
+    searchAddress: function (value) {
+        console.log(value.value);
+        if (!value.value) {
+            var storage = Ext.util.LocalStorage.get('id');
+            var latest = storage.getItem("latest");
+            if (latest) Ext.getStore("LocationSearches").loadData(JSON.parse(latest), false);
+        } else {
+            rootView = this.getView()
+            Ext.Ajax.request({
+                url: 'https://nominatim.openstreetmap.org/search/' + value.value,
+                method: 'GET',
+                timeout: 60000,
+                params:
+                    {
+                        format: 'json'
+                    },
+                headers:
+                    {
+                        'Content-Type': 'application/json'
+                    },
+                success: function (response) {
+                    var json = JSON.parse(response.responseText);
+                    Ext.getStore("LocationSearches").loadData(json, false);
+
+                },
+                failure: function (response) {
+                    console.log(response)
+                    Ext.Msg.alert('Status', 'Request Failed.');
+
+                }
+            })
+        }
+    },
+
+    onAddressSelect: function (combo, record) {
+        var storage = Ext.util.LocalStorage.get('id');
+        var latest = storage.getItem("latest");
+        if (!latest) {
+            latest = []
+        } else {
+            latest = JSON.parse(latest);
+            if (latest.length > 10) {
+                latest = latest.slice(0, 9)
+            }
+        }
+        console.log(latest[0].place_id, record.data.place_id)
+        if (latest[0].place_id !== record.data.place_id) {
+            latest.unshift(record.data);
+            storage.setItem("latest", JSON.stringify(latest));
+        }
+
+        rootView.getMapView().setCenter(ol.proj.fromLonLat([
+            Number(record.data.lon),
+            Number(record.data.lat)
+        ]));
+
     },
 
     onCancelClick: function (button) {
