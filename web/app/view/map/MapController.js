@@ -63,7 +63,6 @@ Ext.define('Traccar.view.map.MapController', {
     },
 
     searchAddress: function (value) {
-        console.log(value.value);
         if (!value.value) {
             var storage = Ext.util.LocalStorage.get('id');
             var latest = storage.getItem("latest");
@@ -105,7 +104,6 @@ Ext.define('Traccar.view.map.MapController', {
                 latest = latest.slice(0, 9)
             }
         }
-        console.log(latest[0].place_id, record.data.place_id)
         if (latest[0].place_id !== record.data.place_id) {
             latest.unshift(record.data);
             storage.setItem("latest", JSON.stringify(latest));

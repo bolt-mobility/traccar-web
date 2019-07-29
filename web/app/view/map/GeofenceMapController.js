@@ -51,7 +51,6 @@ Ext.define('Traccar.view.map.GeofenceMapController', {
     },
 
     searchAddress: function (value) {
-        console.log(value.value);
         if (!value.value) {
             var storage = Ext.util.LocalStorage.get('id');
             var latest = storage.getItem("latest");
@@ -76,7 +75,6 @@ Ext.define('Traccar.view.map.GeofenceMapController', {
 
                 },
                 failure: function (response) {
-                    console.log(response)
                     Ext.Msg.alert('Status', 'Request Failed.');
 
                 }
@@ -95,7 +93,6 @@ Ext.define('Traccar.view.map.GeofenceMapController', {
                 latest = latest.slice(0, 9)
             }
         }
-        console.log(latest[0].place_id, record.data.place_id)
         if (latest[0].place_id !== record.data.place_id) {
             latest.unshift(record.data);
             storage.setItem("latest", JSON.stringify(latest));

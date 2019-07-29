@@ -66,7 +66,6 @@ Ext.define('Traccar.view.map.GeofenceMap', {
     },
 
     initMap: function () {
-        console.log("oopsy")
         var map, featureOverlay, geometry, fillColor;
         this.callParent();
 

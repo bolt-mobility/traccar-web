@@ -61,9 +61,7 @@ Ext.define('Traccar.view.edit.DevicesController', {
         var self = this, readonly, deviceReadonly;
         deviceReadonly = Traccar.app.getPreference('deviceReadonly', false) && !Traccar.app.getUser().get('admin');
         readonly = Traccar.app.getPreference('readonly', false) && !Traccar.app.getUser().get('admin');
-        console.log(Ext.getStore('Geofences').load());
         setTimeout(function () {
-            console.log(Ext.getStore('Geofences').getData());
             var menu = self.view.headerCt.getMenu();
             var geofences = [];
             Ext.getStore('Geofences').getData().items.forEach(function (item) {
@@ -179,6 +177,7 @@ Ext.define('Traccar.view.edit.DevicesController', {
         deviceReadonly = Traccar.app.getPreference('deviceReadonly', false) && !Traccar.app.getUser().get('admin');
         readonly = Traccar.app.getPreference('readonly', false) && !Traccar.app.getUser().get('admin');
         empty = selected.length === 0;
+        this.lookupReference('toolbarEndRideButton').setDisabled(empty || readonly || deviceReadonly);
         this.lookupReference('toolbarEditButton').setDisabled(empty || readonly || deviceReadonly);
         this.lookupReference('toolbarRemoveButton').setDisabled(empty || readonly || deviceReadonly);
         deviceMenu = this.lookupReference('toolbarDeviceMenu');
