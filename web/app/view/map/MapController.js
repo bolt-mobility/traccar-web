@@ -104,7 +104,10 @@ Ext.define('Traccar.view.map.MapController', {
                 latest = latest.slice(0, 9)
             }
         }
-        if (latest[0].place_id !== record.data.place_id) {
+        if(latest[0] == null) {
+            latest = [record.data]
+            storage.setItem("latest", JSON.stringify(latest));
+        } else if (latest[0].place_id !== record.data.place_id) {
             latest.unshift(record.data);
             storage.setItem("latest", JSON.stringify(latest));
         }
@@ -113,6 +116,7 @@ Ext.define('Traccar.view.map.MapController', {
             Number(record.data.lon),
             Number(record.data.lat)
         ]));
+        rootView.getMapView().setZoom(20);
 
     },
 
