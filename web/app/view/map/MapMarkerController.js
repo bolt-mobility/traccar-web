@@ -203,6 +203,11 @@ Ext.define('Traccar.view.map.MapMarkerController', {
 
         for (i = 0; i < data.length; i++) {
             position = data[i];
+            var positionData = position.data;
+            if (!(positionData.latitude >= -90.0 && positionData.latitude <= 90.0 && positionData.longitude >= -180.0 && positionData.longitude <= 180.0)) {
+                console.log('Device with id '+position.get('deviceId')+' is out of valid coordinate range.');
+                return;
+            }
             device = deviceStore.getById(position.get('deviceId'));
 
             if (device) {
