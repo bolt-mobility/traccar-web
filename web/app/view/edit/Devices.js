@@ -123,6 +123,10 @@ Ext.define('Traccar.view.edit.Devices', {
             dataIndex: 'model',
             filter: 'string'
         }, {
+            text: Strings.vehicleType,
+            dataIndex: 'vehicleType',
+            filter : 'string'
+        }, {
             text: Strings.deviceContact,
             dataIndex: 'contact',
             hidden: true

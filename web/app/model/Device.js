@@ -37,6 +37,10 @@ Ext.define('Traccar.model.Device', {
         type: 'string',
         allowNull: true
     }, {
+        name: 'vehicleType',
+        type: 'string',
+        allowNull: true
+    }, {
         name: 'contact',
         type: 'string',
         allowNull: true

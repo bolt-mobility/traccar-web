@@ -136,6 +136,7 @@
     "deviceModel": "Model",
     "deviceContact": "Contact",
     "deviceCategory": "Category",
+    "vehicleType": "Vehicle Types",
     "deviceLastUpdate": "Last Update",
     "deviceCommand": "Command",
     "deviceFollow": "Follow",
