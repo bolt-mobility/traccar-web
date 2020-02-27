@@ -49,6 +49,11 @@ Ext.define('Traccar.model.Device', {
         type: 'string',
         allowNull: true
     }, {
+        name: 'vehicleType',
+        type: 'string',
+        mapping: 'attributes.vehicleType',
+        persist: false,
+    }, {
         name: 'lastUpdate',
         type: 'date',
         dateFormat: 'c'
