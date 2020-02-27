@@ -70,7 +70,7 @@ Ext.define('Traccar.Style', {
     mapScaleNormal: 1,
     mapScaleSelected: 1.5,
 
-    mapMaxZoom: 18,
+    mapMaxZoom: 22,
     mapDelay: 500,
 
     mapAccuracyColor: 'rgba(96, 96, 96, 1.0)',
